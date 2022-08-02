@@ -37,14 +37,14 @@ class PatchTeams:
         except IndexError:
             self.plist = "autopkg.plist"
 
-        # URL of Teams webhook
-        self.url = "https://outlook.office.com/webhook/"
-        # token
-        self.url += "-e03688a2ab2d/IncomingWebhook/0ac15911fcfa42deb"
+        self.url = (
+            "https://outlook.office.com/webhook/"
+            + "-e03688a2ab2d/IncomingWebhook/0ac15911fcfa42deb"
+        )
 
         # set up logging
         now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-        frmt = "%(levelname)s {} %(message)s".format(now)
+        frmt = f"%(levelname)s {now} %(message)s"
         # set up logging
         logging.basicConfig(filename=LOGFILE, level=LOGLEVEL, format=frmt)
         self.logger = logging.getLogger("")
@@ -136,7 +136,7 @@ class PatchTeams:
                 name = p["title"]
                 version = p["version"]
                 self.logger.debug("Version: %s Name: %s", version, name)
-                sections[item]["title"] = "**%s**" % name
+                sections[item]["title"] = f"**{name}**"
                 sections[item]["text"] = version
                 item = item + 1
             j = json.loads(self.template)
@@ -153,7 +153,7 @@ class PatchTeams:
         item = 0
         for f in fails:
             sections.append(json.loads(self.err_section))
-            sections[item]["title"] = "**%s**" % f["recipe"]
+            sections[item]["title"] = f'**{f["recipe"]}**'
             sections[item]["text"] = f["message"].replace("\n", " ")
             item = item + 1
         j = json.loads(self.err_template)

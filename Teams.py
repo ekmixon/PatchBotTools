@@ -37,17 +37,18 @@ class Teams:
         except IndexError:
             self.plist = "autopkg.plist"
 
-        # URL of Teams webhook
-        self.url = "https://outlook.office.com/webhook/"
-        # token
-        self.url += "-e03688a2ab2d/IncomingWebhook/0ac15911fcfa42deb"
+        self.url = (
+            "https://outlook.office.com/webhook/"
+            + "-e03688a2ab2d/IncomingWebhook/0ac15911fcfa42deb"
+        )
+
         self.url += "1d07f0672950542/63a48cfb-c3ef-4ee9-be63-fafbe4177f30"
         # URL for a button to open package test policy in Jamf Pro
         self.pol_base = "https://suncorp.jamfcloud.com/policies.html?id="
 
         # set up logging
         now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-        frmt = "%(levelname)s {} %(message)s".format(now)
+        frmt = f"%(levelname)s {now} %(message)s"
         # set up logging
         logging.basicConfig(filename=LOGFILE, level=LOGLEVEL, format=frmt)
         self.logger = logging.getLogger("")
@@ -153,7 +154,7 @@ class Teams:
                 self.logger.debug("Policy: %s Name: %s", pol_id, pkg_name)
                 (app, version) = pkg_name.split("-")
                 pol_uri = self.pol_base + pol_id
-                sections[item]["title"] = "**%s**" % app
+                sections[item]["title"] = f"**{app}**"
                 sections[item]["text"] = version
                 sections[item]["potentialAction"][0]["targets"][0][
                     "uri"
@@ -173,7 +174,7 @@ class Teams:
         item = 0
         for f in fails:
             sections.append(json.loads(self.err_section))
-            sections[item]["title"] = "**%s**" % f["recipe"]
+            sections[item]["title"] = f'**{f["recipe"]}**'
             sections[item]["text"] = f["message"].replace("\n", " ")
             item = item + 1
         j = json.loads(self.err_template)
